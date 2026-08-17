@@ -103,12 +103,12 @@ window.__ModuleLoader__.load({
     const SIDEBAR_CSS = [
       ':root { --ocean-ice-glass: rgba(246, 251, 255, 0.6); --ocean-ice-panel: rgba(244, 250, 255, 0.82); --ocean-blue-line: rgba(120, 170, 225, 0.5); --ocean-blue-line-soft: rgba(120, 170, 225, 0.32); --ocean-gold: #c8a76a; --ocean-gold-soft: rgba(200, 167, 106, 0.5); --ocean-gold-faint: rgba(200, 167, 106, 0.28); --ocean-text: #16335e; --ocean-text-soft: #52749e; --ocean-hover: rgba(190, 220, 246, 0.5); --ocean-selected: rgba(150, 200, 245, 0.22); --ocean-shadow: 0 8px 24px rgba(40, 80, 140, 0.12); --ocean-shadow-sm: 0 2px 8px rgba(40, 80, 140, 0.08); --ds-new-session-scale: 1; }',
       'body[data-ds-dark-theme] { --dsw-specific-sidebar-fill: rgba(238, 246, 252, 0.94); }',
-      '.hHd-Xa_root { background: linear-gradient(180deg, rgba(238, 246, 252, 0.94), rgba(222, 240, 250, 0.9)); color: var(--ocean-text); }',
+      '.hHd-Xa_root { background: linear-gradient(180deg, rgba(238, 246, 252, 0.94), rgba(222, 240, 250, 0.9)) !important; color: var(--ocean-text) !important; }',
       '.hHd-Xa_logoRow { height: auto; min-height: 60px; margin-bottom: 0; padding: 8px 12px; border-radius: 16px; background: var(--ocean-ice-glass); border: 1px solid var(--ocean-blue-line); box-shadow: var(--ocean-shadow), inset 0 0 0 1px var(--ocean-gold-faint); position: relative; }',
       '.hHd-Xa_logoRow::before, .hHd-Xa_logoRow::after { content: ""; position: absolute; top: 50%; width: 40px; height: 26px; background-image: url("' + FLOURISH + '"); background-size: contain; background-repeat: no-repeat; background-position: center; pointer-events: none; opacity: 0.6; }',
       '.hHd-Xa_logoRow::before { left: 4px; transform: translateY(-50%); }',
       '.hHd-Xa_logoRow::after { right: 4px; transform: translateY(-50%) scaleX(-1); }',
-      '.hHd-Xa_brand { color: var(--ocean-text); }',
+      '.hHd-Xa_brand { color: var(--ocean-text) !important; }',
       '.hHd-Xa_brand::after { content: "HARNESS"; margin-left: 8px; padding: 1px 6px; border: 1px solid var(--ocean-gold-soft); border-radius: 6px; color: var(--ocean-gold); font-size: 9px; font-weight: 600; letter-spacing: 0.08em; line-height: 14px; flex: none; }',
       '.hHd-Xa_iconButton { box-sizing: border-box; color: var(--ocean-text) !important; border-radius: 50% !important; background: linear-gradient(180deg, rgba(255, 255, 255, 0.88), rgba(214, 235, 252, 0.62)) !important; border: 1px solid rgba(120, 180, 235, 0.5) !important; box-shadow: 0 2px 8px rgba(60, 120, 190, 0.14), inset 0 1px 0 rgba(255, 255, 255, 0.8), inset 0 -1px 0 rgba(150, 200, 245, 0.22) !important; backdrop-filter: blur(8px) saturate(140%); -webkit-backdrop-filter: blur(8px) saturate(140%); transition: background-color 0.15s ease, box-shadow 0.15s ease, transform 0.1s ease; }',
       '.hHd-Xa_iconButton:hover { background: linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(226, 242, 254, 0.76)) !important; border-color: rgba(120, 180, 235, 0.72) !important; box-shadow: 0 0 0 1px rgba(150, 205, 250, 0.45), 0 3px 10px rgba(80, 140, 210, 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.9) !important; transform: translateY(-1px); }',
@@ -145,6 +145,29 @@ window.__ModuleLoader__.load({
       '.VOzbGW_trigger:focus-visible { outline: none; }',
     ].join('\n')
 
+    // Keep the theme's injected <style> tags pinned at the END of <head> so
+    // their rules always win the cascade. The app injects its own per-plugin
+    // <style> tags as chunks load; on a cold first load some arrive AFTER our
+    // tags and (equal specificity, no !important) would override the skin —
+    // that made the sidebar color and the new-session button flicker between
+    // themed and default across refreshes. For <style> tags, style-sheet order
+    // follows DOM order, so re-appending ours on every head mutation pins them
+    // last. App rules with higher specificity (e.g. .hHd-Xa_collapsed .x) still
+    // win where intended.
+    function keepThemeCssLast() {
+      const observer = new MutationObserver(() => {
+        const head = document.head
+        const tags = [...head.querySelectorAll('style[data-plugin-css="uiskin-theme"]')]
+        if (!tags.length) return
+        if (tags.includes(head.lastElementChild)) return
+        const fragment = document.createDocumentFragment()
+        for (const tag of tags) fragment.appendChild(tag)
+        head.appendChild(fragment)
+      })
+      observer.observe(document.head, { childList: true })
+      return () => observer.disconnect()
+    }
+
     function apply(ctx) {
       ctx.effect(() => {
         const disposers = []
@@ -152,6 +175,7 @@ window.__ModuleLoader__.load({
         if (theme !== undefined) {
           disposers.push(theme.overrideTokens('blue-glass-theme', TOKENS))
         }
+        disposers.push(keepThemeCssLast())
         disposers.push(insertStyle(BASE_CSS))
         disposers.push(insertStyle(OCEAN_CSS))
         disposers.push(insertStyle(COMPOSER_CSS))

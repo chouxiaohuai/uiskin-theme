@@ -1,0 +1,7 @@
+# uiskin-theme bundle patch — one inserted row, loaded at boot like any web row.
+# The loader imports `uiskin-theme` (host half, lib/index.js); the modules
+# node half sees the package's `dsh.client` declaration and serves
+# /plugins/uiskin-theme/client.js to the browser.
+- insert:
+    - id: uiskin-theme
+      name: uiskin-theme

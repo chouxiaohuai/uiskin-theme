@@ -4,6 +4,8 @@ DeepSeek Harness Web 的**静态插件包（profile bundle）**：海洋背景�
 
 与动态插件（`cordis_define` 现场定义、重启即丢）不同，本包以 npm 包形式装进 profile，**每次启动自动加载，重启不丢，无需人工批准**。
 
+![Blue Glass Theme 主题预览](assets/preview.jpg)
+
 ## 安装
 
 需要已安装 Node.js 与 [pnpm](https://pnpm.io/installation)，并已能运行 `dsh` CLI（`npx @deepseek-ai/dsh` 亦可）。

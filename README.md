@@ -57,4 +57,4 @@ npm run build      # 把 assets/ 内联成 data URI，重新生成 lib/client.js
 - DSH 目前是 `0.1.0-rc` 预发布版本，插件 API（`dsh.bundle` / `dsh.client` / slots / theme 服务）可能随版本调整；升级 DSH 后如遇兼容问题，关注本仓库的更新。
 - 本包只依赖 `@deepseek-ai/cordis`（peer）与 `react`（peer），无需 `allowBuilds` 放行构建脚本。
 ## 其他
--制作不易，您的支持才是我们开发的动力，希望大家喜欢的动动小手点一个star，如果想要给予我们一点小小的经费支持请联系shutiaochou@gmail.com。
+-制作不易，您的支持才是我们开发的动力，希望大家喜欢的动动小手点一个star，如果想要给予我们一点小小的经费支持或者提出一些建议和Bug请联系shutiaochou@gmail.com。

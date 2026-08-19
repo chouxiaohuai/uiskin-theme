@@ -6,7 +6,6 @@ DeepSeek Harness Web 的**静态插件包（profile bundle）**：海洋背景�
 
 ![Blue Glass Theme 主题预览](assets/preview.jpg)
 
-![Blue Glass Theme 侧边栏细节](assets/preview2.jpg)
 
 > **许可证**：本主题为原创作品，**保留所有权利（All Rights Reserved）**，非开源协议。
 > 未经作者书面许可，不得复制、修改、再分发、二次创作或用于商业用途；仅允许按原样安装与个人使用。

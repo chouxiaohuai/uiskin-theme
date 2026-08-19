@@ -108,8 +108,14 @@ window.__ModuleLoader__.load({
       '.hHd-Xa_logoRow::before, .hHd-Xa_logoRow::after { content: ""; position: absolute; top: 50%; width: 40px; height: 26px; background-image: url("' + FLOURISH + '"); background-size: contain; background-repeat: no-repeat; background-position: center; pointer-events: none; opacity: 0.6; }',
       '.hHd-Xa_logoRow::before { left: 4px; transform: translateY(-50%); }',
       '.hHd-Xa_logoRow::after { right: 4px; transform: translateY(-50%) scaleX(-1); }',
-      '.hHd-Xa_brand { color: var(--ocean-text) !important; }',
-      '.hHd-Xa_brand::after { content: "HARNESS"; margin-left: 8px; color: var(--ocean-gold); font-size: 9px; font-weight: 600; letter-spacing: 0.08em; line-height: 14px; flex: none; }',
+      '.hHd-Xa_brand { position: relative; color: var(--ocean-text) !important; }',
+      // The system brand wordmark is "DeepSeek HARNESS" (one SVG). Mask the
+      // system "HARNESS" half away and let the themed ::after badge (gold,
+      // bordered) take its place right after "DeepSeek" — so only one gold
+      // bordered HARNESS shows. DeepSeek ends at x=109.5 of the 182-wide
+      // viewBox; the system HARNESS starts at x=111.1.
+      '.hHd-Xa_brand svg { -webkit-mask-image: linear-gradient(to right, #000 0 60.7%, transparent 61%); mask-image: linear-gradient(to right, #000 0 60.7%, transparent 61%); }',
+      '.hHd-Xa_brand::after { content: "HARNESS"; position: absolute; left: 112px; top: 50%; transform: translateY(-50%); padding: 1px 6px; border: 1px solid var(--ocean-gold-soft); border-radius: 6px; color: var(--ocean-gold); font-size: 9px; font-weight: 600; letter-spacing: 0.08em; line-height: 14px; white-space: nowrap; }',
       '.hHd-Xa_iconButton { box-sizing: border-box; color: var(--ocean-text) !important; border-radius: 50% !important; background: linear-gradient(180deg, rgba(255, 255, 255, 0.88), rgba(214, 235, 252, 0.62)) !important; border: 1px solid rgba(120, 180, 235, 0.5) !important; box-shadow: 0 2px 8px rgba(60, 120, 190, 0.14), inset 0 1px 0 rgba(255, 255, 255, 0.8), inset 0 -1px 0 rgba(150, 200, 245, 0.22) !important; backdrop-filter: blur(8px) saturate(140%); -webkit-backdrop-filter: blur(8px) saturate(140%); transition: background-color 0.15s ease, box-shadow 0.15s ease, transform 0.1s ease; }',
       '.hHd-Xa_iconButton:hover { background: linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(226, 242, 254, 0.76)) !important; border-color: rgba(120, 180, 235, 0.72) !important; box-shadow: 0 0 0 1px rgba(150, 205, 250, 0.45), 0 3px 10px rgba(80, 140, 210, 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.9) !important; transform: translateY(-1px); }',
       '.hHd-Xa_newSession { position: relative; width: 80%; margin: 0 auto 0; height: auto; aspect-ratio: 2.9 / 1; min-height: 0; background: transparent !important; border: none !important; box-shadow: none !important; padding: 0 !important; border-radius: 0 !important; justify-content: center; align-items: center; gap: 8px; overflow: visible; transition: filter 0.15s ease; }',

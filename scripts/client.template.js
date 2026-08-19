@@ -45,8 +45,12 @@ window.__ModuleLoader__.load({
     const BASE_CSS = [
       ':root { --ds-theme-bg-image: linear-gradient(135deg, #dceaf8 0%, #9cc0e8 22%, #6b9ad8 45%, #3a6cb8 72%, #16325f 100%); }',
       'html, body { min-height: 100%; background-color: #a8c6e4; }',
-      '.pI_x6G_centerCol { position: relative; overflow: hidden; background-color: #c8dcf0; background-image: linear-gradient(rgba(5, 14, 34, 0.34), rgba(5, 14, 34, 0.34)), var(--ds-theme-bg-image); background-size: cover, cover; background-position: center, center; background-repeat: no-repeat, no-repeat; }',
-      '.pI_x6G_centerCol > * { background: transparent; }',
+      '.pI_x6G_centerCol { position: relative; overflow: hidden; background: transparent; }',
+      // The background image itself is pale, so it is moved to a ::before layer
+      // with a saturation boost (filter: saturate) plus a dark overlay — vivid
+      // deep ocean without washing out. Children are lifted above it.
+      '.pI_x6G_centerCol::before { content: ""; position: absolute; top: 0; right: 0; bottom: 0; left: 0; background-image: linear-gradient(rgba(5, 14, 34, 0.24), rgba(5, 14, 34, 0.24)), var(--ds-theme-bg-image); background-size: cover, cover; background-position: center, center; background-repeat: no-repeat, no-repeat; filter: saturate(1.6); z-index: 0; pointer-events: none; }',
+      '.pI_x6G_centerCol > * { position: relative; z-index: 1; background: transparent; }',
       'body:not([data-ds-dark-theme]) { --dsw-specific-bubble: #f6f9ff !important; }',
       '.hHd-Xa_footerActions { flex-wrap: wrap; }',
     ].join('\n')

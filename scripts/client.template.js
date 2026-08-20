@@ -103,7 +103,15 @@ window.__ModuleLoader__.load({
     const SIDEBAR_CSS = [
       ':root { --ocean-ice-glass: rgba(246, 251, 255, 0.6); --ocean-ice-panel: rgba(244, 250, 255, 0.82); --ocean-blue-line: rgba(120, 170, 225, 0.5); --ocean-blue-line-soft: rgba(120, 170, 225, 0.32); --ocean-gold: #c8a76a; --ocean-gold-soft: rgba(200, 167, 106, 0.5); --ocean-gold-faint: rgba(200, 167, 106, 0.28); --ocean-text: #16335e; --ocean-text-soft: #52749e; --ocean-hover: rgba(190, 220, 246, 0.5); --ocean-selected: rgba(150, 200, 245, 0.22); --ocean-shadow: 0 8px 24px rgba(40, 80, 140, 0.12); --ocean-shadow-sm: 0 2px 8px rgba(40, 80, 140, 0.08); --ds-new-session-scale: 1; }',
       'body[data-ds-dark-theme] { --dsw-specific-sidebar-fill: rgba(238, 246, 252, 0.94); }',
-      '.hHd-Xa_root { background: linear-gradient(180deg, rgba(238, 246, 252, 0.94), rgba(222, 240, 250, 0.9)) !important; color: var(--ocean-text) !important; }',
+      '.hHd-Xa_root { background: linear-gradient(180deg, rgba(238, 246, 252, 0.94), rgba(222, 240, 250, 0.9)) !important; color: var(--ocean-text) !important; position: relative; overflow: hidden; }',
+      // Bottom cartoon character as a BACKGROUND decoration: direct child of the
+      // root, absolute, just above the bottom wave divider (root-relative
+      // bottom 145px ≈ wave top), z-index 0 with pointer-events none — every
+      // control (root children raised to z-index 1) stays above it, and the
+      // root's overflow:hidden clips it to the sidebar bounds.
+      '.hHd-Xa_root > :not(.uiskin-sidebar-sticker) { position: relative; z-index: 1; }',
+      '.hHd-Xa_root > .uiskin-sidebar-sticker { position: absolute; left: 50%; transform: translateX(-50%); bottom: 145px; height: 96px; width: auto; object-fit: contain; z-index: 0; pointer-events: none; }',
+      '.hHd-Xa_root.hHd-Xa_collapsed > .uiskin-sidebar-sticker { height: 40px; bottom: 44px; }',
       '.hHd-Xa_logoRow { height: auto; min-height: 60px; margin-bottom: 0; padding: 8px 12px; border-radius: 16px; background: var(--ocean-ice-glass); border: 1px solid var(--ocean-blue-line); box-shadow: var(--ocean-shadow), inset 0 0 0 1px var(--ocean-gold-faint); position: relative; }',
       '.hHd-Xa_logoRow::before, .hHd-Xa_logoRow::after { content: ""; position: absolute; top: 50%; width: 40px; height: 26px; background-image: url("' + FLOURISH + '"); background-size: contain; background-repeat: no-repeat; background-position: center; pointer-events: none; opacity: 0.6; }',
       '.hHd-Xa_logoRow::before { left: 4px; transform: translateY(-50%); }',
@@ -229,6 +237,30 @@ window.__ModuleLoader__.load({
       return () => { observer.disconnect(); if (holder) holder.remove(); };
     }
 
+    // The bottom cartoon character becomes a BACKGROUND decoration of the
+    // sidebar: injected as a direct child of the sidebar root, absolutely
+    // positioned just above the bottom wave divider, with z-index 0 and
+    // pointer-events none so every control stays above it. The root's
+    // overflow:hidden clips it to the sidebar bounds; the size (96px wide /
+    // 40px collapsed) comes from CSS so it follows the sidebar state.
+    function injectSidebarSticker() {
+      let img = null;
+      function build() {
+        const root = document.querySelector('.hHd-Xa_root');
+        if (!root || img) return;
+        img = document.createElement('img');
+        img.className = 'uiskin-sidebar-sticker';
+        img.src = STICKER_URI;
+        img.alt = '';
+        img.draggable = false;
+        root.appendChild(img);
+      }
+      build();
+      const observer = new MutationObserver(build);
+      observer.observe(document.body, { childList: true, subtree: true });
+      return () => { observer.disconnect(); if (img) img.remove(); };
+    }
+
     function apply(ctx) {
       ctx.effect(() => {
         const disposers = []
@@ -238,6 +270,7 @@ window.__ModuleLoader__.load({
         }
         disposers.push(keepThemeCssLast())
         disposers.push(injectHarnessGold())
+        disposers.push(injectSidebarSticker())
         disposers.push(insertStyle(BASE_CSS))
         disposers.push(insertStyle(OCEAN_CSS))
         disposers.push(insertStyle(COMPOSER_CSS))
@@ -282,20 +315,14 @@ window.__ModuleLoader__.load({
       }
 
       function SidebarSticker(props) {
+        // Layout placeholder only: keeps the footer flow exactly as before so the
+        // wave divider stays put. The actual character is injected by
+        // injectSidebarSticker() as an absolutely-positioned background layer of
+        // the sidebar root (below all controls, clipped by the sidebar).
         const wide = !!(props && props.wide)
         return React.createElement('div', {
-          style: { flexBasis: '100%', order: -1, display: 'flex', justifyContent: 'center', padding: '4px 0 8px', background: 'transparent' },
-        }, React.createElement('img', {
-          src: STICKER_URI,
-          alt: '',
-          draggable: false,
-          style: {
-            height: wide ? 96 : 40,
-            width: 'auto',
-            objectFit: 'contain',
-            display: 'block',
-          },
-        }))
+          style: { flexBasis: '100%', order: -1, flex: 'none', width: 118, height: wide ? 96 : 40, background: 'transparent', pointerEvents: 'none' },
+        })
       }
 
       const slots = ctx.slots

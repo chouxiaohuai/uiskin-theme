@@ -314,17 +314,6 @@ window.__ModuleLoader__.load({
         }))
       }
 
-      function SidebarSticker(props) {
-        // Layout placeholder only: keeps the footer flow exactly as before so the
-        // wave divider stays put. The actual character is injected by
-        // injectSidebarSticker() as an absolutely-positioned background layer of
-        // the sidebar root (below all controls, clipped by the sidebar).
-        const wide = !!(props && props.wide)
-        return React.createElement('div', {
-          style: { flexBasis: '100%', order: -1, flex: 'none', width: 118, height: wide ? 96 : 40, background: 'transparent', pointerEvents: 'none' },
-        })
-      }
-
       const slots = ctx.slots
       if (slots !== undefined) {
         // settings.trigger is a SINGLE slot also claimed by the built-in
@@ -338,10 +327,6 @@ window.__ModuleLoader__.load({
         slots.inject('sidebar.footer.action', () => slots.register(
           { name: 'sidebar.footer.action', id: 'theme-divider', order: 0, label: '' },
           (props) => React.createElement(SidebarDivider, props),
-        ))
-        slots.inject('sidebar.footer.action', () => slots.register(
-          { name: 'sidebar.footer.action', id: 'theme-sticker', order: 0, label: '主题贴图' },
-          (props) => React.createElement(SidebarSticker, props),
         ))
       }
     }

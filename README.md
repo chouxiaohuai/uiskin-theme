@@ -16,10 +16,10 @@ DeepSeek Harness Web 的**静态插件包（profile bundle）**：海洋背景�
 
 ```bash
 # 从 GitHub 安装（把 USERNAME 换成你的 GitHub 用户名）
-dsh plugin --profile web add github:USERNAME/uiskin-theme
+dsh plugin --profile web add github:USERNAME/dsh-uiskin-theme
 
 # 或指定分支 / 提交
-dsh plugin --profile web add github:USERNAME/uiskin-theme#main
+dsh plugin --profile web add github:USERNAME/dsh-uiskin-theme#main
 ```
 
 装完后重启 `dsh web`（或下次启动时）即自动生效。

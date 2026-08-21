@@ -78,13 +78,13 @@ window.__ModuleLoader__.load({
       '.uV2eYG_primary { width: 34px !important; height: 34px !important; border-radius: 50% !important; background: linear-gradient(180deg, rgba(150,200,245,0.7), rgba(110,170,225,0.6)) !important; border: 1px solid rgba(200,225,250,0.6) !important; box-shadow: 0 2px 8px rgba(60,120,190,0.25), inset 0 1px 0 rgba(255,255,255,0.5); color: #f2f8ff !important; }',
       '.uV2eYG_primary:hover:not(:disabled) { background: linear-gradient(180deg, rgba(165,212,248,0.8), rgba(125,182,235,0.7)) !important; box-shadow: 0 0 0 1px rgba(160,210,250,0.5), 0 2px 10px rgba(90,150,215,0.3), inset 0 1px 0 rgba(255,255,255,0.6); }',
       '[data-composer-card] textarea::placeholder { color: #7d97b8 !important; font-family: "STKaiti", "KaiTi", "STSong", "Georgia", serif; font-style: italic; letter-spacing: 0.04em; opacity: 0.9; }',
-      // The composer seat ships with z-index:7 (active conversation) / the
-      // composer stack z-index:1, which lifts them above the app's z:1000
-      // settings modal — so the chat composer painted on top of the open
-      // settings dialog. Drop both to auto so the settings dialog always
-      // renders above the composer (composer stays above the messages via DOM
-      // order). The glass backdrop is kept.
-      '.wSkVaW_composerSeat, .wSkVaW_composerStack { z-index: auto !important; }',
+      // The conversation header tabs (对话/轨迹) carry z-index:1 and the
+      // composer seat ships z-index:7 (active) / the composer stack z:1, which
+      // lift them above the app's z:1000 settings modal — so chat/header content
+      // painted on top of the open settings dialog. Drop all of them to auto so
+      // the settings dialog always renders above the conversation. The glass
+      // backdrop and normal conversation layering are kept.
+      '.wSkVaW_header, .wSkVaW_tabs, .wSkVaW_composerSeat, .wSkVaW_composerStack { z-index: auto !important; }',
     ].join('\n')
 
     const PERMISSION_CSS = [

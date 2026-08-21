@@ -1,11 +1,10 @@
 # uiskin-theme — Blue Glass Theme（海洋幻想主题）
 
-DeepSeek Harness Web 的**静态插件包（profile bundle）**：海洋背景、玻璃气泡、海洋侧边栏、鲸鱼设置按钮、炫彩模型文字。
+DeepSeek Harness Web 的**静态插件包（profile bundle）**：清澈的海洋背景、玻璃气泡、海洋侧边栏（含金色渐变「HARNESS」字标与底部卡通角色）、鲸鱼设置按钮、渐变模型文字。
 
 与动态插件（`cordis_define` 现场定义、重启即丢）不同，本包以 npm 包形式装进 profile，**每次启动自动加载，重启不丢，无需人工批准**。
 
 ![Blue Glass Theme 主题预览](assets/preview.jpg)
-
 
 > **许可证**：本主题为原创作品，**保留所有权利（All Rights Reserved）**，非开源协议。
 > 未经作者书面许可，不得复制、修改、再分发、二次创作或用于商业用途；仅允许按原样安装与个人使用。
@@ -32,6 +31,8 @@ dsh plugin --profile web add github:USERNAME/dsh-uiskin-theme#main
 dsh plugin --profile web remove uiskin-theme
 ```
 
+> **仓库名与包名**：GitHub 仓库为 `dsh-uiskin-theme`（曾用名 `uiskin-theme`），而安装后的**插件包名**是 `uiskin-theme`（取自 `package.json` 的 `name`）。因此安装用 `github:USERNAME/dsh-uiskin-theme`，卸载用 `remove uiskin-theme`，两者不冲突。
+
 ## 工作原理
 
 ```
@@ -55,7 +56,8 @@ npm run build      # 把 assets/ 内联成 data URI，重新生成 lib/client.js
 ## 注意事项
 
 - 素材以 base64 内联在 `lib/client.js`（约 1.1 MB），加载一次即可，适合皮肤类小图片。若想更小，可先把 `assets/` 里的图压缩再构建。
-- DSH 目前是 `0.1.0-rc` 预发布版本，插件 API（`dsh.bundle` / `dsh.client` / slots / theme 服务）可能随版本调整；升级 DSH 后如遇兼容问题，关注本仓库的更新。
+- DSH 目前是 `0.1.1-rc` 预发布版本，插件 API（`dsh.bundle` / `dsh.client` / slots / theme 服务）可能随版本调整；升级 DSH 后如遇兼容问题，关注本仓库的更新。
 - 本包只依赖 `@deepseek-ai/cordis`（peer）与 `react`（peer），无需 `allowBuilds` 放行构建脚本。
+
 ## 其他
--制作不易，您的支持才是我们开发的动力，希望大家喜欢的动动小手点一个star，如果想要给予我们一点小小的经费支持或者提出一些建议和Bug请联系shutiaochou@gmail.com。
+- 制作不易，您的支持才是我们开发的动力。如果喜欢，欢迎点一个 star；如需提建议或反馈 Bug，请联系 shutiaochou@gmail.com。
